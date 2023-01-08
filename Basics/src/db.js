@@ -24,7 +24,7 @@ const posts = [
         id: '20011',
         title: 'My d',
         body: 'I donn wanna nobody',
-        published: false
+        published: true
     },
     {
         id: '20012',
@@ -68,4 +68,6 @@ const comments = [
     }
 ]
 
-export {users, posts, comments}
+const db = {users, posts, comments}
+
+export {db as default}
