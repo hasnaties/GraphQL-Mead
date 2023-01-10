@@ -2,6 +2,26 @@ import { v4 as uuidV4 } from 'uuid';
 
 const Mutation = {
 
+    createPost(parent, { data }, {db, pubsub}, info){
+
+        const newPost = {
+            id: uuidV4(),
+            ...data,
+            comments: []
+        }
+        
+        db.posts.push(newPost)
+
+        if (newPost.published) {
+            
+
+            const result = pubsub.publish('post', {post: newPost})
+            console.log(result);
+        }
+
+        return newPost;
+    },
+
     deletePost(parent, args, {db}, info){
         
         const postIndex = db.posts.findIndex((post) => post.id === args.id);
@@ -41,7 +61,7 @@ const Mutation = {
         return postToUpdate;
     },
 
-    createComment(parent, args, {db}, info){
+    createComment(parent, args, {db, pubsub}, info){
 
         const isPost = db.posts.find((post) => post.id === args.data.post)
 
@@ -55,11 +75,19 @@ const Mutation = {
             ...args.data
         }
 
-        comments.push(newComment);
+        db.comments.push(newComment);
+        
+        pubsub.publish('comment', {
+            comment: {
+                mutation: "CREATED",
+                data: newComment
+            }
+        })
 
         return newComment;
     },
-    deleteComment(parent, args, {db}, info){
+
+    deleteComment(parent, args, {db, pubsub}, info){
         
         const commentIndex = db.comments.findIndex((comment) => comment.id === args.id);
 
@@ -67,11 +95,18 @@ const Mutation = {
             throw new Error ("comment doesn't exist.")
         }
 
-        const deletedComment = db.comments.splice(commentIndex, 1);
+        const [deletedComment] = db.comments.splice(commentIndex, 1);
 
-        return deletedComment[0];
+        pubsub.publish('comment', {
+            post: {
+                mutation: "DELETED",
+                data: deletedPost
+            }
+        })
+
+        return deletedComment;
     },
-    updateComment(parent, args, {db}, info){
+    updateComment(parent, args, {db, pubsub}, info){
 
         const {id, data} = args
         const comment = db.comments.find((comment) => comment.id === id)
@@ -82,6 +117,13 @@ const Mutation = {
 
         if (typeof data.text === "string") {
             comment.text = data.text
+            
+            pubsub.publish('comment', {
+                post: {
+                    mutation: "UPDATED",
+                    data: deletedPost
+                }
+            })
         }
 
         return comment;

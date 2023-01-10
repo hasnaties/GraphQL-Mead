@@ -47,6 +47,11 @@ type Query {
         updateComment(id: ID!, data: UpdateCommentInput!): Comment!
     }
 
+    type Subscription {
+        post: Post!
+        comment: CommentSubscriptionPayload!
+    }
+
     type User {
         id: ID!
         name: String!
@@ -68,4 +73,9 @@ type Query {
         text: String!
         author: User!
         post: Post!
+    }
+
+    type CommentSubscriptionPayload {
+        mutation: String!
+        data: Comment!
     }
