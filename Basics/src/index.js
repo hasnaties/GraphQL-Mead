@@ -1,7 +1,7 @@
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 import db from './db'
 import Query from './resolvers/query'
-import Mutation from './resolvers/mutation'
+import Mutation from './resolvers/Mutation.js'
 import Subscription from './resolvers/Subscription'
 import User from './resolvers/User'
 import Post from './resolvers/Post'

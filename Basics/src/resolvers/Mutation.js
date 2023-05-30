@@ -77,7 +77,7 @@ const Mutation = {
 
         db.comments.push(newComment);
         
-        pubsub.publish('comment', {
+        pubsub.publish(`comment ${args.data.post}`, {
             comment: {
                 mutation: "CREATED",
                 data: newComment
