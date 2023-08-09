@@ -8,9 +8,36 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String?
+  id      String  @id @unique @default(cuid())
+  name    String
+  email   String  @unique
+  posts  Post[]
+  comments  Comment[]
+}
+
+model Post {
+  id  String @id @unique @default(cuid())
+  title  String
+  body  String?
+  published  Boolean  @default(false)
+  authorId String
+  comments Comment[]
+
+  // Relation
+  author  User  @relation(fields: [authorId], references: [id])
+}
+
+model Comment {
+  id  String  @id @unique @default(cuid())
+  text  String
+  authorId  String
+  postId  String
+
+  //Relations
+  author  User @relation(fields: [authorId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
 }
