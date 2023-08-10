@@ -1,0 +1,86 @@
+# source: http://localhost:4000
+# timestamp: Thu Aug 10 2023 18:04:59 GMT+0500 (Pakistan Standard Time)
+
+type Comment {
+  id: ID!
+  text: String!
+  author: User!
+  post: Post!
+}
+
+type CommentSubscriptionPayload {
+  mutation: MutationType!
+  data: Comment!
+}
+
+input CreateCommentInput {
+  text: String!
+  author: ID!
+  post: ID!
+}
+
+input CreatePostInput {
+  title: String!
+  body: String!
+  published: Boolean!
+  author: ID!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  age: Int
+}
+
+type Mutation {
+  createUser(data: CreateUserInput): User!
+  createPost(data: CreatePostInput): Post!
+  deletePost(id: ID!): Post!
+  updatePost(id: ID!, data: UpdatePostInput): Post!
+  createComment(data: CreateCommentInput!): Comment!
+  deleteComment(id: ID!): Comment!
+  updateComment(id: ID!, data: UpdateCommentInput!): Comment!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  published: Boolean!
+  comments: [Comment!]!
+}
+
+type Query {
+  users(query: Int): [Post!]!
+  posts(query: Int): [Post!]!
+  comments: [Comment!]!
+}
+
+type Subscription {
+  post: Post!
+  comment(postId: ID!): CommentSubscriptionPayload!
+}
+
+input UpdateCommentInput {
+  text: String!
+}
+
+input UpdatePostInput {
+  title: String!
+  body: String!
+  published: Boolean!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  age: Int!
+  comments: [Comment!]!
+}

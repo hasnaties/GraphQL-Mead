@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js --exec babel-node",
-    "dev": "nodemon src/index.js --exec babel-node"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js --exec babel-node",
+    "get-schema": "graphql get-schema -p prisma"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,9 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "graphql-cli": "^2.16.4",
     "graphql-yoga": "^1.14.10",
+    "prisma-binding": "^2.1.1",
     "uuid": "^9.0.0"
   }
 }
